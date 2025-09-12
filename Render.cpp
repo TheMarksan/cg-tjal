@@ -43,7 +43,7 @@ void GLTFRenderer::render() {
     if (!meshes.empty()) {
         setBool("useVertexColor", false);
         setBool("useTexture", false);
-        setVec3("baseColor", glm::vec3(0.82f, 0.82f, 0.82f)); // cinza claro sólido
+        const glm::vec3 defaultColor = glm::vec3(0.82f, 0.82f, 0.82f); // cinza claro
         for (size_t i = 0; i < meshes.size(); ++i) {
             const auto& mesh = meshes[i];
             if (!mesh.isValid) continue;
@@ -73,6 +73,23 @@ void GLTFRenderer::render() {
             } else {
                 setBool("useWorldTex", false);
                 setBool("useTexture", false);
+            }
+
+            // Cores específicas por nome de mesh
+            // color_3        -> #938F86FF (147,143,134)
+            // titulo         -> #545761FF (84,87,97)
+            // Cube.036       -> #846945FF (132,105,69) - sofás
+            // Cylinder.005   -> #846945FF (132,105,69) - banco
+            if (mesh.name == "color_3") {
+                setVec3("baseColor", glm::vec3(147.0f/255.0f, 143.0f/255.0f, 134.0f/255.0f));
+            } else if (mesh.name == "titulo") {
+                setVec3("baseColor", glm::vec3(84.0f/255.0f, 87.0f/255.0f, 97.0f/255.0f));
+            } else if (mesh.name == "Cube.036") {
+                setVec3("baseColor", glm::vec3(132.0f/255.0f, 105.0f/255.0f, 69.0f/255.0f));
+            } else if (mesh.name == "Cylinder.005") {
+                setVec3("baseColor", glm::vec3(132.0f/255.0f, 105.0f/255.0f, 69.0f/255.0f));
+            } else {
+                setVec3("baseColor", defaultColor);
             }
 
             setMatrix4("model", m);

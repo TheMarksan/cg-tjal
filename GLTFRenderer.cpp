@@ -61,12 +61,16 @@ static const char* kFragmentShaderSource = R"(
         }
         
         vec3 lightColor = vec3(1.0, 1.0, 1.0);
-        vec3 ambient = 0.3 * color;
+        // Aumenta luz ambiente para suavizar áreas escuras
+        vec3 ambient = 0.45 * color;
         
+        // Wrap lighting para suavizar o terminador (meia-lambert)
         vec3 norm = normalize(Normal);
         vec3 lightDir = normalize(lightPos - FragPos);
-        float diff = max(dot(norm, lightDir), 0.0);
-        vec3 diffuse = diff * lightColor * color;
+        float nl = dot(norm, lightDir);
+        float wrap = 0.35; // 0 = lambertiano padrão, ~0.3-0.4 suaviza
+        float soft = clamp((nl + wrap) / (1.0 + wrap), 0.0, 1.0);
+        vec3 diffuse = soft * lightColor * color;
         
         vec3 result = ambient + diffuse;
         FragColor = vec4(result, 1.0);
@@ -81,6 +85,7 @@ GLTFRenderer::GLTFRenderer() {
     cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
     walkHeight = 1.7f; // Altura dos olhos de uma pessoa
+    freeVerticalMovement = false; // Iniciar em modo normal de caminhada
     lastPositionUpdate = 0.0;
     cameraSpeed = 3.0f; // Velocidade um pouco maior para pessoa maior
     mouseSensitivityX = 0.1f;

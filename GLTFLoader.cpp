@@ -7,6 +7,10 @@
 #include "../tjal-modelC/lib/tinygltf/tiny_gltf.h"
 
 bool GLTFRenderer::loadGLTF(const std::string& filepath) {
+    return loadGLTF(filepath, glm::mat4(1.0f));
+}
+
+bool GLTFRenderer::loadGLTF(const std::string& filepath, const glm::mat4& baseTransform) {
     tinygltf::Model gltfModel;
     tinygltf::TinyGLTF loader;
     std::string err, warn;
@@ -74,7 +78,7 @@ bool GLTFRenderer::loadGLTF(const std::string& filepath) {
             for (const auto& primitive : mesh.primitives) {
                 // Usar o nome do nó em vez do nome do mesh para detecção de interações
                 std::string interactionName = !node.name.empty() ? node.name : mesh.name;
-                if (loadPrimitive(primitive, gltfModel, buffer, interactionName, nodeTransform)) {
+                if (loadPrimitive(primitive, gltfModel, buffer, interactionName, baseTransform * nodeTransform)) {
                     loaded = true;
                 }
             }
@@ -87,6 +91,75 @@ bool GLTFRenderer::loadGLTF(const std::string& filepath) {
         chaoTexture = createTextureFromFile("chao.png", false);
     }
     return loaded;
+}
+
+bool GLTFRenderer::loadGLTFAt(const std::string& filepath, const glm::vec3& worldPos) {
+    // Ajustar Y ao chão local na posição desejada
+    glm::vec3 pos = worldPos;
+    pos.y = groundHeightAt(worldPos);
+    glm::mat4 T = glm::translate(glm::mat4(1.0f), pos);
+    std::cout << "Colocando '" << filepath << "' em (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+    return loadGLTF(filepath, T);
+}
+
+bool GLTFRenderer::loadGLTFAtRotZ(const std::string& filepath, const glm::vec3& worldPos, float degreesZ) {
+    // Ajusta Y ao chão e aplica rotação ao redor do eixo Z na posição desejada
+    glm::vec3 pos = worldPos;
+    pos.y = groundHeightAt(worldPos);
+    glm::mat4 T = glm::translate(glm::mat4(1.0f), pos);
+    glm::mat4 Rz = glm::rotate(glm::mat4(1.0f), glm::radians(degreesZ), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 M = T * Rz; // Rotação aplicada na posição final (gira no próprio eixo)
+    std::cout << "Colocando (Rz=" << degreesZ << ") '" << filepath << "' em (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+    return loadGLTF(filepath, M);
+}
+
+bool GLTFRenderer::loadGLTFAtRotY(const std::string& filepath, const glm::vec3& worldPos, float degreesY) {
+    // ROTAÇÃO NA ORIGEM (0,0,0) DEPOIS VOLTA PARA POSIÇÃO ORIGINAL
+    // Sequência correta: R * T (rotação PRIMEIRO, translação DEPOIS)
+    glm::vec3 pos = worldPos;
+    pos.y = groundHeightAt(worldPos);
+    
+    // 1. Rotação na origem (0,0,0) - aplicada PRIMEIRO
+    glm::mat4 R = glm::rotate(glm::mat4(1.0f), degreesY, glm::vec3(0.0f, 1.0f, 0.0f));
+    // 2. Translação para posição final - aplicada DEPOIS
+    glm::mat4 T = glm::translate(glm::mat4(1.0f), pos);
+    
+    // ORDEM CORRETA: R * T = rotação primeiro, depois translação
+    glm::mat4 M = R * T;  // Mudança: R * T em vez de T * R
+    
+    std::cout << "Colocando (Ry=" << glm::degrees(degreesY) << "°) '" << filepath << "' em (" << pos.x << ", " << pos.y << ", " << pos.z << ") [ROTAÇÃO-PRIMEIRO]" << std::endl;
+    return loadGLTF(filepath, M);
+}
+
+bool GLTFRenderer::loadGLTFAtNear(const std::string& filepath, const std::string& anchorMesh, const glm::vec2& offsetXZ) {
+    // Encontrar AABB do anchor
+    BoundingBox target{};
+    bool found = false;
+    for (const auto& box : collisionBoxes) {
+        if (box.meshName == anchorMesh) { target = box; found = true; break; }
+    }
+    if (!found) return false;
+    glm::vec3 center = (target.min + target.max) * 0.5f;
+    glm::vec3 pos(center.x + offsetXZ.x, 0.0f, center.z + offsetXZ.y);
+    pos.y = groundHeightAt(pos);
+    glm::mat4 T = glm::translate(glm::mat4(1.0f), pos);
+    std::cout << "Colocando (chao) '" << filepath << "' em (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+    return loadGLTF(filepath, T);
+}
+
+bool GLTFRenderer::loadGLTFAtOnChao(const std::string& filepath, const glm::vec2& offsetXZFromCenter) {
+    // Encontrar AABB do chao
+    BoundingBox chaoBox{};
+    bool found = false;
+    for (const auto& box : collisionBoxes) {
+        if (box.meshName == "chao") { chaoBox = box; found = true; break; }
+    }
+    if (!found) return false;
+    glm::vec3 center = (chaoBox.min + chaoBox.max) * 0.5f;
+    glm::vec3 pos(center.x + offsetXZFromCenter.x, 0.0f, center.z + offsetXZFromCenter.y);
+    pos.y = groundHeightAt(pos);
+    glm::mat4 T = glm::translate(glm::mat4(1.0f), pos);
+    return loadGLTF(filepath, T);
 }
 
 bool GLTFRenderer::loadPrimitive(const tinygltf::Primitive& primitive,

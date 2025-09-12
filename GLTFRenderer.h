@@ -97,6 +97,7 @@ private:
     glm::vec3 cameraRight;
     glm::vec3 cameraTarget;
     float walkHeight;
+    bool freeVerticalMovement; // Controla se a câmera está em modo de movimento vertical livre
     double lastPositionUpdate;
     float cameraSpeed;
     float mouseSensitivityX;
@@ -155,6 +156,18 @@ public:
     
     // GLTF
     bool loadGLTF(const std::string& filepath);
+    // Carregar com transformação base adicional (para posicionar itens no mundo)
+    bool loadGLTF(const std::string& filepath, const glm::mat4& baseTransform);
+    // Carregar em uma posição do mundo (Y ajustado ao chão)
+    bool loadGLTFAt(const std::string& filepath, const glm::vec3& worldPos);
+    // Carregar em uma posição do mundo com rotação no eixo Z (graus). Y é ajustado ao chão
+    bool loadGLTFAtRotZ(const std::string& filepath, const glm::vec3& worldPos, float degreesZ);
+    // Carregar em uma posição do mundo com rotação no eixo Y (graus). Y é ajustado ao chão
+    bool loadGLTFAtRotY(const std::string& filepath, const glm::vec3& worldPos, float degreesY);
+    // Carregar próximo a um mesh âncora, com deslocamento XZ (Y ajustado ao chão)
+    bool loadGLTFAtNear(const std::string& filepath, const std::string& anchorMesh, const glm::vec2& offsetXZ);
+    // Carregar sobre o 'chao' usando deslocamento XZ relativo ao centro do chao (Y ajustado ao chão)
+    bool loadGLTFAtOnChao(const std::string& filepath, const glm::vec2& offsetXZFromCenter);
     void initDoors();
     
     // Renderização
@@ -162,6 +175,7 @@ public:
     
     // Movimento e controles
     void processMovement(int direction, float deltaTime);
+    void processVerticalMovement(int direction, float deltaTime); // Shift=subir, Space=descer
     void updateDoors(float deltaTime);
     void toggleNearestDoor();
     void rotate(float yawOffset, float pitchOffset);

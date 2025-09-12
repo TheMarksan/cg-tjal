@@ -78,6 +78,14 @@ int main() {
     // Posicionar o usuário em frente à escada a 3.0 unidades de distância
     renderer.spawnInFrontOf("escada", 3.0f);
 
+    // Carregar outros móveis com posições XZ explícitas (Y ajustado ao chão automaticamente)
+    renderer.loadGLTFAt("models/sofa.gltf",    glm::vec3(-4.0f, 0.0f, 8.0f));
+    renderer.loadGLTFAt("models/sofa.gltf",    glm::vec3(-4.0f, 0.0f, 10.0f));
+    renderer.loadGLTFAt("models/sofa.gltf",    glm::vec3(-4.0f, 0.0f, 12.0f));
+    renderer.loadGLTFAt("models/cadeira3.gltf",glm::vec3(-1.0f, 0.0f, 9.0f));
+    renderer.loadGLTFAt("models/cadeira3.gltf",glm::vec3(-1.0f, 0.0f, 11.0f));
+    renderer.loadGLTFAt("models/cadeira3.gltf",glm::vec3(-1.0f, 0.0f, 13.0f));
+
 
 
 
@@ -104,6 +112,8 @@ int main() {
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) renderer.processMovement(1, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) renderer.processMovement(2, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) renderer.processMovement(3, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) renderer.processVerticalMovement(0, deltaTime); // Subir
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) renderer.processVerticalMovement(1, deltaTime); // Descer
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) renderer.processKeyboardRotation(0, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) renderer.processKeyboardRotation(1, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) renderer.processKeyboardRotation(2, deltaTime);

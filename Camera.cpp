@@ -46,14 +46,47 @@ void GLTFRenderer::processMovement(int direction, float deltaTime) {
     
     cameraPos = newPos;
 
-    // Ajustar altura com base no piso/escada no ponto atual
-    float groundY = groundHeightAt(cameraPos);
-    // Suavizar para evitar "quebras" na borda da escada
-    if (lastGroundY == 0.0f) lastGroundY = groundY;
-    float blended = glm::mix(lastGroundY, groundY, groundFollowLerp);
-    lastGroundY = blended;
-    cameraPos.y = blended + walkHeight; // olho a uma altura fixa acima do chão/escada
+    // Ajustar altura com base no piso/escada no ponto atual apenas se não estiver em modo de movimento vertical livre
+    if (!freeVerticalMovement) {
+        float groundY = groundHeightAt(cameraPos);
+        // Suavizar para evitar "quebras" na borda da escada
+        if (lastGroundY == 0.0f) lastGroundY = groundY;
+        float blended = glm::mix(lastGroundY, groundY, groundFollowLerp);
+        lastGroundY = blended;
+        cameraPos.y = blended + walkHeight; // olho a uma altura fixa acima do chão/escada
+    }
         
+    // Atualizar a view matrix
+    updateCameraView();
+}
+
+void GLTFRenderer::processVerticalMovement(int direction, float deltaTime) {
+    const float verticalSpeed = 4.5f;
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    
+    // Ativar modo de movimento vertical livre
+    freeVerticalMovement = true;
+    
+    if (direction == 0) { // Subir (Shift)
+        glm::vec3 newPos = cameraPos + up * verticalSpeed * deltaTime;
+        
+        // Verificar limite superior muito alto para vista aérea (50.0 altura máxima)
+        if (newPos.y <= 50.0f && !checkCollision(newPos)) {
+            cameraPos = newPos;
+        }
+    } else if (direction == 1) { // Descer (Space)
+        glm::vec3 newPos = cameraPos - up * verticalSpeed * deltaTime;
+        
+        // Verificar limite inferior com o chão
+        float groundHeight = groundHeightAt(glm::vec3(newPos.x, 0.0f, newPos.z));
+        if (newPos.y >= groundHeight + 0.5f && !checkCollision(newPos)) { // Altura mínima menor
+            cameraPos = newPos;
+        } else {
+            // Se tentar descer abaixo do limite, desativar movimento livre para voltar ao modo normal
+            freeVerticalMovement = false;
+        }
+    }
+    
     // Atualizar a view matrix
     updateCameraView();
 }

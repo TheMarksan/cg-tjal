@@ -2,6 +2,9 @@
 
 void GLTFRenderer::initDoors() {
     std::cout << "Inicializando portas..." << std::endl; // Debug
+    // Evitar duplicatas quando chamado após múltiplos loadGLTF
+    doors.clear();
+    doorIndexByName.clear();
     // Descobrir caixas e meshes das portas
     auto findMeshIndexByName = [&](const std::string& n) -> int {
         for (size_t i = 0; i < meshes.size(); ++i) {
@@ -11,13 +14,13 @@ void GLTFRenderer::initDoors() {
     };
     for (const auto& box : collisionBoxes) {
         std::cout << "Verificando mesh: '" << box.meshName << "'" << std::endl; // Debug
-        if (box.meshName == "porta_front_1" || box.meshName == "porta_front_2") {
+        if (box.meshName == "porta_front_1" || box.meshName == "porta_front_2" || box.meshName == "porta_interna_1") {
             std::cout << "Porta encontrada: " << box.meshName << std::endl; // Debug
             Door d;
             d.name = box.meshName;
             d.meshIndex = findMeshIndexByName(box.meshName);
             d.box = box;
-            d.hingeLeft = (box.meshName == "porta_front_1");
+            d.hingeLeft = (box.meshName == "porta_front_1" || box.meshName == "porta_interna_1");
             // Eixo de rotação: linha vertical no lado do batente.
             // Escolhe o eixo de largura (maior entre X e Z) para usar o extremo correto.
             glm::vec3 size = box.max - box.min;
