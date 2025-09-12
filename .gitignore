@@ -1,0 +1,8 @@
+# Large model binaries should not be committed
+models/*.bin
+models/*.glb
+# OS/editor
+.DS_Store
+*.swp
+*.swo
+.vscode/

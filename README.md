@@ -25,3 +25,6 @@ Controls:
 - T: cycle floor texture
 - F11: toggle fullscreen
 - Esc: quit
+
+Note about large assets
+- Don’t commit large binaries (`*.bin`, `*.glb`) to GitHub; they exceed the 100MB limit. Keep them locally under `models/` or use Git LFS if needed.
