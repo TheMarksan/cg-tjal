@@ -5,7 +5,11 @@
 ```
 ├── main.cpp              # Ponto de entrada e loop principal
 ├── GLTFRenderer.h/.cpp    # Classe principal do renderizador
-├── GLTFLoader.cpp         # Carregamento de modelos glTF
+├── GLTFLoader.cpp    ### 🔧 Características Técnicas
+- **Performance**: Loop otimizado com diferentes frequências de update, VSync para 60 FPS estáveis
+- **Robustez**: Tratamento de erros OpenGL e fallbacks para assets
+- **Modularidade**: Código separado por responsabilidade
+- **Escalabilidade**: Sistema facilmente extensível para novos objetos/funcionalidades# Carregamento de modelos glTF
 ├── Camera.cpp             # Sistema de câmera e movimento
 ├── Physics.cpp            # Detecção de colisão e física básica
 ├── Render.cpp             # Pipeline de renderização e cores
@@ -148,7 +152,7 @@ while (!glfwWindowShouldClose(window)) {
 - **Input Principal**: Verificado a cada frame (WASD, setas, Shift, Space)
 - **Input Secundário**: Verificado a cada 5 frames (T, E, P, F11)
 - **Validações**: A cada 30 frames
-- **VSync Desabilitado**: `glfwSwapInterval(0)` para máxima responsividade
+- **VSync Habilitado**: `glfwSwapInterval(1)` para taxa fixa de 60 FPS
 
 ## 🎨 Sistema de Cores e Materiais
 

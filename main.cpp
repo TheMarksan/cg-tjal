@@ -45,7 +45,7 @@ int main() {
     glfwSetWindowCloseCallback(window, windowCloseCallback);
     
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(0);
+    glfwSwapInterval(1); // Habilitar VSync para 60 FPS
 
     if (glewInit() != GLEW_OK) {
         std::cerr << "❌ Falha ao inicializar GLEW" << std::endl;
@@ -148,9 +148,16 @@ int main() {
                     glfwGetWindowSize(window, &prevW, &prevH);
                     glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
                 }
+                
+                // Reconfigurar VSync após mudança de modo
+                glfwSwapInterval(1);
+                
                 // Update viewport after mode change
                 int w, h; glfwGetFramebufferSize(window, &w, &h);
                 glViewport(0, 0, w, h);
+                
+                // Garantir que o contexto está ativo
+                glfwMakeContextCurrent(window);
             }
             if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_RELEASE) f11Pressed = false;
         }
