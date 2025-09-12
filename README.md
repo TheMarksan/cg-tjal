@@ -1,30 +1,38 @@
 # gltf_renderer
 
-A simple OpenGL viewer for glTF (.gltf/.glb) models with camera controls, door interaction, and a procedural floor.
+Um visualizador simples de OpenGL para modelos glTF (.gltf/.glb) com controles de câmera, interação com portas e piso procedural.
 
-## Build
+## Compilar
 
-Requirements: g++, GLFW, GLEW, OpenGL 3.3, pthreads. On Debian/Ubuntu you might need packages like `libglfw3-dev` and `libglew-dev`.
+Requisitos: g++, GLFW, GLEW, OpenGL 3.3, pthreads. Em Debian/Ubuntu, instale pacotes como `libglfw3-dev` e `libglew-dev`.
 
 ```bash
 make
 ```
 
-## Run
+## Executar
 
-Place your model files under `models/` (e.g., `models/TJAL.gltf` and `models/TJAL.bin`). Then:
+O programa procura o modelo em `models/TJAL.gltf` (com o binário `models/TJAL.bin`). Também funciona com `.glb`.
+
+Se você tiver o arquivo compactado `models/tjal-cg.zip`, primeiro descompacte dentro da pasta `models/` para gerar `TJAL.gltf` e `TJAL.bin`:
+
+```bash
+unzip models/tjal-cg.zip -d models
+```
+
+Depois, execute:
 
 ```bash
 make run
 ```
 
-Controls:
-- WASD: move
-- Arrow keys: look around
-- E: toggle nearest door
-- T: cycle floor texture
-- F11: toggle fullscreen
-- Esc: quit
+## Controles
+- WASD: mover
+- Setas: olhar ao redor
+- E: alternar porta mais próxima
+- T: alternar textura do piso
+- F11: alternar tela cheia
+- Esc: sair
 
-Note about large assets
-- Don’t commit large binaries (`*.bin`, `*.glb`) to GitHub; they exceed the 100MB limit. Keep them locally under `models/` or use Git LFS if needed.
+## Observações sobre assets grandes
+- Não versionar binários grandes (`*.bin`, `*.glb`) no GitHub (limite de 100MB). Mantenha-os localmente em `models/` ou use Git LFS se precisar versioná-los.
