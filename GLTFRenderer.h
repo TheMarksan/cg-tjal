@@ -65,7 +65,6 @@ class GLTFRenderer {
 private:
     std::vector<Mesh> meshes;
     std::vector<BoundingBox> collisionBoxes;
-    std::vector<BoundingBox> meshAABBs; // AABB por mesh para culling
     GLuint shaderProgram;
     glm::mat4 model, view, projection;
 
@@ -140,10 +139,7 @@ private:
     bool checkCollision(const glm::vec3& newPos);
     float groundHeightAt(const glm::vec3& posXZ);
 
-    // Frustum culling
-    glm::vec4 frustumPlanes[6]; // left, right, bottom, top, near, far
-    void updateFrustumPlanes(const glm::mat4& vp);
-    bool aabbInFrustum(const BoundingBox& box) const;
+    // (sem otimizações de culling)
 
 public:
     GLTFRenderer();
@@ -173,4 +169,7 @@ public:
     void toggleFloorTexture();
     void updateRealTimePosition(double currentTime);
     void toggleRealTimePosition();
+
+    // Spawn helpers
+    void spawnInFrontOf(const std::string& meshName, float distance);
 };

@@ -165,3 +165,43 @@ float GLTFRenderer::groundHeightAt(const glm::vec3& posXZ) {
     // Dar uma margem mínima para alcançar o topo mesmo com erros de ponto flutuante
     return maxY;
 }
+
+void GLTFRenderer::spawnInFrontOf(const std::string& meshName, float distance) {
+    // Encontrar a AABB do mesh desejado
+    BoundingBox target{};
+    bool found = false;
+    for (const auto& box : collisionBoxes) {
+        if (box.meshName == meshName) { target = box; found = true; break; }
+    }
+    if (!found) return;
+
+    // Centro e dimensões
+    glm::vec3 center = (target.min + target.max) * 0.5f;
+    glm::vec3 size = target.max - target.min;
+
+    // Direção "frente" heurística: eixo de maior extensão no plano XZ, apontando para fora
+    glm::vec3 forward(0.0f, 0.0f, -1.0f);
+    bool alongX = std::abs(size.x) >= std::abs(size.z);
+    if (alongX) {
+        // Se a escada é mais larga em X, assumimos subida ao longo de X; fique no -Z para ver a frente
+        forward = glm::vec3(0.0f, 0.0f, -1.0f);
+    } else {
+        // Mais longa em Z; fique no -X
+        forward = glm::vec3(-1.0f, 0.0f, 0.0f);
+    }
+
+    // Posição alvo a uma certa distância do centro (no plano XZ)
+    glm::vec3 pos = center - glm::normalize(glm::vec3(forward.x, 0.0f, forward.z)) * distance;
+
+    // Altura do chão nesse XZ + altura dos olhos
+    float y = groundHeightAt(pos);
+    cameraPos = glm::vec3(pos.x, y + walkHeight, pos.z);
+
+    // Orientar a câmera para olhar para o centro da escada
+    glm::vec3 toTarget = glm::normalize(glm::vec3(center.x - cameraPos.x, 0.0f, center.z - cameraPos.z));
+    // Calcular yaw a partir do vetor direcional no plano XZ
+    yaw = glm::degrees(std::atan2(toTarget.z, toTarget.x));
+    pitch = 0.0f;
+    updateCameraVectors();
+    updateCameraView();
+}

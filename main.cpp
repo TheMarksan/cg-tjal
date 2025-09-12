@@ -75,6 +75,9 @@ int main() {
         return -1;
     }
 
+    // Posicionar o usuário em frente à escada a 3.0 unidades de distância
+    renderer.spawnInFrontOf("escada", 3.0f);
+
 
 
 

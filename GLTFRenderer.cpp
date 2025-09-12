@@ -132,9 +132,6 @@ bool GLTFRenderer::initOpenGL() {
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
     glViewport(0, 0, 800, 600);
@@ -153,41 +150,4 @@ void GLTFRenderer::setBool(const std::string& name, bool value) {
     glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), (int)value);
 }
 
-// Extrai planos do frustum a partir de VP
-void GLTFRenderer::updateFrustumPlanes(const glm::mat4& vp) {
-    // Cada plano como combinação linear das colunas da matriz VP
-    // Plano left:  vp[3] + vp[0]
-    // Plano right: vp[3] - vp[0]
-    // Plano bottom:vp[3] + vp[1]
-    // Plano top:   vp[3] - vp[1]
-    // Plano near:  vp[3] + vp[2]
-    // Plano far:   vp[3] - vp[2]
-    frustumPlanes[0] = vp[3] + vp[0];
-    frustumPlanes[1] = vp[3] - vp[0];
-    frustumPlanes[2] = vp[3] + vp[1];
-    frustumPlanes[3] = vp[3] - vp[1];
-    frustumPlanes[4] = vp[3] + vp[2];
-    frustumPlanes[5] = vp[3] - vp[2];
-    // Normalizar planos
-    for (int i = 0; i < 6; ++i) {
-        glm::vec3 n(frustumPlanes[i]);
-        float l = glm::length(n);
-        if (l > 0.0f) frustumPlanes[i] /= l;
-    }
-}
-
-bool GLTFRenderer::aabbInFrustum(const BoundingBox& b) const {
-    // Testa AABB contra 6 planos
-    for (int i = 0; i < 6; ++i) {
-        const glm::vec3 n(frustumPlanes[i]);
-        float d = frustumPlanes[i].w;
-        // Ponto mais distante no sentido da normal negativo (para rejeição rápida)
-        glm::vec3 p = glm::vec3(
-            n.x > 0 ? b.max.x : b.min.x,
-            n.y > 0 ? b.max.y : b.min.y,
-            n.z > 0 ? b.max.z : b.min.z
-        );
-        if (glm::dot(n, p) + d < 0.0f) return false; // totalmente fora
-    }
-    return true;
-}
+// (sem utilitários de culling)

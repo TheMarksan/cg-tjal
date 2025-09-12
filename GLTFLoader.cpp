@@ -240,8 +240,7 @@ bool GLTFRenderer::loadPrimitive(const tinygltf::Primitive& primitive,
         
     // Adicionar às colisões
         collisionBoxes.push_back(bbox);
-    // Guardar AABB para render/culling
-    meshAABBs.push_back(bbox);
+    // (sem culling)
         
         return true;
     }

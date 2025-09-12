@@ -44,18 +44,9 @@ void GLTFRenderer::render() {
         setBool("useVertexColor", false);
         setBool("useTexture", false);
         setVec3("baseColor", glm::vec3(0.82f, 0.82f, 0.82f)); // cinza claro sólido
-        // Atualizar planos do frustum uma vez por frame
-        glm::mat4 vp = projection * view;
-        updateFrustumPlanes(vp);
-
         for (size_t i = 0; i < meshes.size(); ++i) {
             const auto& mesh = meshes[i];
             if (!mesh.isValid) continue;
-
-            // Frustum culling rápido por AABB
-            if (i < meshAABBs.size() && !aabbInFrustum(meshAABBs[i])) {
-                continue;
-            }
 
             // Verificar se este mesh é uma porta com rotação
             glm::mat4 m = model; // base do modelo
