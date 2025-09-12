@@ -80,6 +80,7 @@ void GLTFRenderer::render() {
             // titulo         -> #545761FF (84,87,97)
             // Cube.036       -> #846945FF (132,105,69) - sofás
             // Cylinder.005   -> #846945FF (132,105,69) - banco
+            // Cube           -> #846945FF (132,105,69) - tapete (mesma cor do sofá)
             if (mesh.name == "color_3") {
                 setVec3("baseColor", glm::vec3(147.0f/255.0f, 143.0f/255.0f, 134.0f/255.0f));
             } else if (mesh.name == "titulo") {
@@ -88,6 +89,8 @@ void GLTFRenderer::render() {
                 setVec3("baseColor", glm::vec3(132.0f/255.0f, 105.0f/255.0f, 69.0f/255.0f));
             } else if (mesh.name == "Cylinder.005") {
                 setVec3("baseColor", glm::vec3(132.0f/255.0f, 105.0f/255.0f, 69.0f/255.0f));
+            } else if (mesh.name == "Cube") {
+                setVec3("baseColor", glm::vec3(132.0f/255.0f, 105.0f/255.0f, 69.0f/255.0f)); // Mesma cor do sofá para tapete
             } else {
                 setVec3("baseColor", defaultColor);
             }

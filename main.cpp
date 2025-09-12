@@ -82,9 +82,17 @@ int main() {
     renderer.loadGLTFAt("models/sofa.gltf",    glm::vec3(-4.0f, 0.0f, 8.0f));
     renderer.loadGLTFAt("models/sofa.gltf",    glm::vec3(-4.0f, 0.0f, 10.0f));
     renderer.loadGLTFAt("models/sofa.gltf",    glm::vec3(-4.0f, 0.0f, 12.0f));
+    
+    // Tapete no centro, bem no nível do chão
+    renderer.loadGLTFAt("models/tapete.gltf",  glm::vec3(-2.0f, 0.0f, -5.5f));
+    
     renderer.loadGLTFAt("models/cadeira3.gltf",glm::vec3(-1.0f, 0.0f, 9.0f));
     renderer.loadGLTFAt("models/cadeira3.gltf",glm::vec3(-1.0f, 0.0f, 11.0f));
     renderer.loadGLTFAt("models/cadeira3.gltf",glm::vec3(-1.0f, 0.0f, 13.0f));
+    
+    // Projetor no teto, posicionado no centro da sala - usando matriz para evitar ajuste automático do Y
+    glm::mat4 projetorTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 5.5f, -12.5f));
+    renderer.loadGLTF("models/projetor.gltf", projetorTransform);
 
 
 
