@@ -1,5 +1,7 @@
 # Modelagem TJAL - CG UFAL
 
+**Disciplina**: Computação Gráfica
+
 **Equipe**: Marcos Melo dos Santos, Felipe Gabriel Marques dos Santos, Clauderlan Batista Alves
 
 ## Renderização
@@ -9,9 +11,6 @@
 ## Modelo Blender
 
 <img style="width: 500px;" src="tjal-blender.png">
-
-**Disciplina**: Computação Gráfica
-
 
 
 
