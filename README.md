@@ -26,7 +26,7 @@ O programa procura o modelo em `models/TJAL.gltf` (com o binário `models/TJAL.b
 Se você tiver o arquivo compactado `models/tjal-cg.zip`, primeiro descompacte dentro da pasta `models/` para gerar `TJAL.gltf` e `TJAL.bin`:
 
 ```bash
-unzip models/tjal-cg.zip -d models
+unzip models/models.zip -d models
 ```
 
 Depois, execute:
