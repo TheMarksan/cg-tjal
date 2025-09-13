@@ -1,6 +1,7 @@
 # Modelagem TJAL - CG UFAL
 
-**Disciplina**: Computação Gráfica 
+**Disciplina**: Computação Gráfica
+
 **Equipe**: Marcos Melo dos Santos, Felipe Gabriel Marques dos Santos, Clauderlan Batista Alves
 
 
