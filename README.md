@@ -1,4 +1,8 @@
-# gltf_renderer
+# Modelagem TJAL - CG UFAL
+
+**Disciplina**: Computação Gráfica 
+**Equipe**: Marcos Melo dos Santos, Felipe Gabriel Marques dos Santos, Clauderlan Batista Alves
+
 
 Um visualizador simples de OpenGL para modelos glTF (.gltf/.glb) com controles de câmera, interação com portas e piso procedural.
 
