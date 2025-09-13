@@ -4,8 +4,12 @@
 
 **Equipe**: Marcos Melo dos Santos, Felipe Gabriel Marques dos Santos, Clauderlan Batista Alves
 
+## Resumo
+
 
 Um visualizador simples de OpenGL para modelos glTF (.gltf/.glb) com controles de câmera, interação com portas e piso procedural.
+
+Os modelos foram construídos utilizando blender a partir de formas geométricas tridimensionais como cubos e cilindros, além de técnicas de extrusão e chanfro para superfícies irregulares.
 
 ## Compilar
 
